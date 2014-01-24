@@ -80,7 +80,8 @@ public:
   void Activate (Node *n)
   { if (n) n -> Heartbeat ();
     if (Video *v = dynamic_cast<Video*> (n))
-      { v -> Rewind ();
+      { if (n == currently_active)
+          v -> Rewind ();
         v -> SetVolume (1.0);
       }
   }
@@ -97,7 +98,8 @@ public:
       { Node *n = NthKid (i);
         if (n -> HitCheck (e))
           { Deactivate (currently_active);
-            Activate (currently_active = n);
+            Activate (n);
+            currently_active = n;
             SetTranslation (- KidLoc (i));
             return true;
           } 
