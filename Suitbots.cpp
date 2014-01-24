@@ -78,7 +78,8 @@ public:
   }
 
   void Activate (Node *n)
-  { if (Video *v = dynamic_cast<Video*> (n))
+  { if (n) n -> Heartbeat ();
+    if (Video *v = dynamic_cast<Video*> (n))
       { v -> Rewind ();
         v -> SetVolume (1.0);
       }
