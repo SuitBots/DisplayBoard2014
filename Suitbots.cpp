@@ -26,25 +26,25 @@ public:
       AddVideo (nam);
   }
 
+  template <typename T>
+  void AdjustMaxSize (T* t)
+  { if (0.0 > max_size) max_size = t -> Diagonal ();
+    else max_size = std::min (max_size, t -> Diagonal ());
+  }
+
   void AddVideo (const Str& nam)
   { Video *v = new Video (nam);
     v -> EnableLooping ();
     v -> SetVolume (0.0);
     v -> Play ();
     AppendKid (v);
-    if (max_size < 0.0)
-      max_size = v -> Diagonal ();
-    else
-      max_size = std::min (max_size, v -> Diagonal ());
+    AdjustMaxSize (v);
   }
 
   void AddImage (const Str& nam)
   { Image *img = new Image (nam);
     AppendKid (img);
-    if (max_size < 0.0)
-      max_size = img -> Diagonal ();
-    else
-      max_size = std::min (max_size, img -> Diagonal ());
+    AdjustMaxSize (img);
   }
 
   Vect KidLoc (const int i)
@@ -125,11 +125,4 @@ void Setup ()
   for (auto arg : args)
     h -> Add (arg);
   h -> Rejigger ();
-
-  std::cerr 
-    << FeldAspect (Feld ())
-    << "\t" << Feld () -> Width ()
-    << "\t" << Feld () -> Height ()
-    << "\t" << FeldAspect (Feld ())
-    << "\n";
 }
